@@ -18,4 +18,38 @@ nest g service users
 
 
 ## To install mapped types
-yarn add --dev @nestjs/mapped-types 
+yarn add --dev @nestjs/mapped-types
+
+
+## To add validation
+yarn add class-validator class-transformer
+
+
+## Install prisma
+yarn add --dev prisma
+
+
+## Initialize prisma
+npx prisma init
+
+
+## Create a migration Initialization with prisma
+npx prisma migrate dev --name init
+
+
+
+## Run a migration with prisma
+- npx prisma generate
+- npx prisma migrate dev --name file_change
+
+
+
+## Create a database module
+nest g module database
+
+## Create database service
+nest g service database
+
+
+## Quickly set up a nest project
+nest g resource user
