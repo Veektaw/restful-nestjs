@@ -1,0 +1,17 @@
+## To start new project
+nest new rest-api 
+
+## To run in development
+yarn start:dev
+
+
+## To add a module
+nest g module users
+
+
+## To create the controllers ofa module
+nest g controller users
+
+
+## To create the service of a module
+nest g service users
