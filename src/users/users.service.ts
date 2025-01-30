@@ -39,16 +39,17 @@ export class UsersService {
         return user
     }
 
-    create(user: {name: string, email: string, age: number, role: 'admin' | 'user' | 'guest'}) {
+    create(user: { name: string; email: string; age: number; role: 'admin' | 'user' | 'guest' }) {
+        const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
+        const highestId = usersByHighestId.length > 0 ? usersByHighestId[0].id : 0;
 
-        const usersByhighestId = [...this.users].sort((a, b) => b.id - a.id)
         const newUser = {
-            id: usersByhighestId[0].id + 1,
+            id: highestId + 1,
             ...user
-        }
-        
-        this.users.push(newUser)
-        return newUser
+        };
+
+        this.users.push(newUser);
+        return newUser;
     }
 
     update(id: number, updatedUser: {name?: string, email?: string, age?: number, role?: 'admin' | 'user' | 'guest'}) {
