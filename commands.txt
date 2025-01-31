@@ -53,3 +53,11 @@ nest g service database
 
 ## Quickly set up a nest project
 nest g resource user
+
+
+## To set up logger module
+nest g module my-logger
+
+
+## To set up logger service
+nest g service my-logger

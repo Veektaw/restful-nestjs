@@ -10,10 +10,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     email: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    age: number;
-
     @IsEnum(['admin', 'user', 'guest'], {
         "message": "Invalid role. Role must be one of the following values: admin, user, guest"
     })

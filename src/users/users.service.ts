@@ -1,81 +1,68 @@
+// src/users/users.service.ts
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import  { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class UsersService {
-    private users = [
-        {
-            id: 1,
-            name: 'John Doe',
-            email: 'XXXXXXXXXXXXXXXXXX',
-            age: 30,
-            role: 'admin'
+  constructor(private prisma: DatabaseService) {}
 
-        },
-        {
-            id: 2,
-            name: 'Jane Doe',
-            email: 'XXXXXXXXXXXXXXXXXX',
-            age: 30,
-            role: 'user'
-        },
-        {
-            id: 3,
-            name: 'Jack Doe',
-            email: 'XXXXXXXXXXXXXXXXXX',
-            age: 30,
-            role: 'guest'
-        }
-    ]
+  async findAll(role?: 'admin' | 'user' | 'guest') {
+    if (role && !['admin', 'user', 'guest'].includes(role)) {
+      throw new NotFoundException(`Role ${role} not found`);
+    }
+    
+    return this.prisma.user.findMany({
+      where: role ? { role } : {},
+    });
+  }
 
-    findAll(role?: 'admin' | 'user' | 'guest') {
-        if (role) {
-            if (role && !['admin', 'user', 'guest'].includes(role)) {
-                throw new NotFoundException(`Role ${role} not found`)
-            }
-            return this.users.filter(user => user.role === role)
-            
-        }
-        return this.users
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    findOne(id: number) {
-        const user = this.users.find(user => user.id === id)
-        if (!user) {
-            throw new NotFoundException(`User with id ${id} not found`)
-        }
-        return user
+    return user;
+  }
+
+  async create(user: CreateUserDto) {
+    return this.prisma.user.create({
+      data: user,
+    });
+  }
+
+  async update(id: string, updatedUser: UpdateUserDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    create(user: CreateUserDto) {
-        const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
-        const highestId = usersByHighestId.length > 0 ? usersByHighestId[0].id : 0;
+    return this.prisma.user.update({
+      where: { id },
+      data: updatedUser,
+    });
+  }
 
-        const newUser = {
-            id: highestId + 1,
-            ...user
-        };
+  async delete(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
 
-        this.users.push(newUser);
-        return newUser;
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    update(id: number, updatedUser: UpdateUserDto) {
-        this.users = this.users.map(user => {
-            if (user.id === id) {
-                return {...user, ...updatedUser}
-            }
-            return user
-        })
-        return this.findOne(id)
-    }
-
-
-    delete(id: number) {
-        const removedUser = this.findOne(id)
-        this.users = this.users.filter(user => user.id !== id)
-        return removedUser
-    }
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }
