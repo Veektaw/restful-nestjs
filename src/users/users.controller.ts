@@ -16,7 +16,7 @@ export class UsersController {
     @SkipThrottle({default: false }) // This will enable the throttle for this route
     @Get() 
     findAll(@Ip() ip: string, @Query('role') role?: | 'admin' | 'user' | 'guest') {
-        this.logger.log(`Request from IP: ${ip}`); // This will log the IP of the request
+        this.logger.log(`Request from IP: ${ip}`, UsersController.name); // This will log the IP of the request
         return this.usersService.findAll(role)
     }
 
