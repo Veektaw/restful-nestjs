@@ -29,6 +29,10 @@ yarn add class-validator class-transformer
 yarn add --dev prisma
 
 
+## Prisma client
+yarn add @prisma/client
+
+
 ## Initialize prisma
 npx prisma init
 
@@ -61,3 +65,8 @@ nest g module my-logger
 
 ## To set up logger service
 nest g service my-logger
+
+
+## To install JWT and passport
+yarn add @nestjs/passport passport @nestjs/jwt passport-jwt
+yarn add --dev @types/passport-jwt
